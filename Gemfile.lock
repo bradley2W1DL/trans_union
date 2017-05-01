@@ -25,7 +25,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  rspec
+  bundler (~> 1.13)
+  rspec (~> 3.4.0)
   trans_union!
 
 BUNDLED WITH
