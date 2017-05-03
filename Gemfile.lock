@@ -2,11 +2,26 @@ PATH
   remote: .
   specs:
     trans_union (0.1.0)
+      savon (>= 2.0.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    akami (1.3.1)
+      gyoku (>= 0.4.0)
+      nokogiri
+    builder (3.2.3)
     diff-lcs (1.2.5)
+    gyoku (1.3.1)
+      builder (>= 2.1.2)
+    httpi (2.4.2)
+      rack
+      socksify
+    mini_portile2 (2.1.0)
+    nokogiri (1.7.1)
+      mini_portile2 (~> 2.1.0)
+    nori (2.6.0)
+    rack (2.0.1)
     rspec (3.4.0)
       rspec-core (~> 3.4.0)
       rspec-expectations (~> 3.4.0)
@@ -20,6 +35,18 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
+    savon (2.11.1)
+      akami (~> 1.2)
+      builder (>= 2.1.2)
+      gyoku (~> 1.2)
+      httpi (~> 2.3)
+      nokogiri (>= 1.4.0)
+      nori (~> 2.4)
+      wasabi (~> 3.4)
+    socksify (1.7.1)
+    wasabi (3.5.0)
+      httpi (~> 2.0)
+      nokogiri (>= 1.4.2)
 
 PLATFORMS
   ruby
@@ -30,4 +57,4 @@ DEPENDENCIES
   trans_union!
 
 BUNDLED WITH
-   1.13.6
+   1.14.6

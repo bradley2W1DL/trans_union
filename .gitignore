@@ -1,2 +1,4 @@
 .idea
 *.gem
+.rspec
+.ruby_version

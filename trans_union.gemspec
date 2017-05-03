@@ -18,6 +18,8 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(spec)})
   s.require_paths = ['lib']
 
+  s.add_dependency 'savon', '>=2.0.0'
+
   s.add_development_dependency 'rspec', '~> 3.4.0'
   s.add_development_dependency 'bundler', '~> 1.13'
 end
