@@ -2,3 +2,5 @@
 *.gem
 .rspec
 .ruby_version
+testr/*
+.ruby-version
