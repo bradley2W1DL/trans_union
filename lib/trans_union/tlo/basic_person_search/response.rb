@@ -19,7 +19,7 @@ module TransUnion::TLO
         result[:basic_person_search_output_records][:basic_person_search_output_record]
       end
 
-      def consolidate_records(records_array=output_records)
+      def consolidated_records(records_array=output_records)
         #
         # Returns a single record for each unique record[:report_token]
         #   - consolidates any unique address / phone records together
@@ -43,6 +43,68 @@ module TransUnion::TLO
         unique_records = consolidate_records(unique_records) if unique_records.any?
 
         [top_record, unique_records].flatten
+      end
+
+      def address_records
+        # {
+        #   report_token: '123-blah',
+        #   addresses: [
+        #     {
+        #       line1: '123 45th st.',
+        #       city: 'BOULDER',
+        #       state: 'CO',
+        #       zip: '80026',
+        #       county: 'BOULDER'
+        #     },
+        #     address: '{...}'
+        #   ]
+        # }
+        @_address_records ||= consolidated_records.map do |record|
+          ret = {}
+          ret[:report_token] = record[:report_token]
+          ret[:addresses] = []
+          if record[:address_record].is_a? Hash
+            ret[:addresses] << record[:address_record][:address]
+          else
+            ret[:addresses] = record[:address_record].map { |r| r[:address] }
+          end
+          ret[:addresses] = ret[:addresses].uniq { |a| a.values_at(:line1, :city, :state, :zip) }
+          ret
+        end
+      end
+
+      def phone_records
+        # {
+        #   report_token: '123-xyz',
+        #   phones: [
+        #     {
+        #       listing_name: 'BARKLEY, GNARLES',
+        #       phone_type: 'Mobile',
+        #       carrier: 'VERIZON',
+        #       carrier_type: 'WIRELESS',
+        #       city: '',
+        #       state: '',
+        #       county: '',
+        #       time_zone: 'MT',
+        #       score: '80',
+        #       phone: '9705552231'
+        #     }
+        #   ]
+        # }
+        @_phone_records ||= consolidated_records.map do |record|
+          ret = {}
+          ret[:report_token] = record[:report_token]
+          ret[:phones] = []
+          if record[:address_record].is_a? Hash
+            ret[:phones] << record[:address_record][:phones][:basic_phone_listing]
+          else # Array
+            ret[:phones] = record[:address_record].map do |r|
+              r[:phones][:basic_phone_listing] unless ret[:phones].include? r[:phones][:basic]
+            end
+          end
+          ret[:phones] = ret[:phones].uniq { |p| p.values_at(:phone, :listing_name, :phone_type) }
+          ret
+        end
       end
     end
   end
