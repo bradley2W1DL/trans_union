@@ -1,4 +1,3 @@
-# require 'savon'
 
 module TransUnion::TLO
   class BasicPersonSearch
@@ -10,7 +9,7 @@ module TransUnion::TLO
 
     operations :basic_person_search
 
-    def self.basic_person_search(options={})
+    def self.perform_search(options={})
       ## returns a Savon::Response object
       response = super(message: build_request_hash(options))
       Response.new(response.body)
@@ -26,7 +25,20 @@ module TransUnion::TLO
         PermissibleUseCode: TransUnion::TLO.permissible_use_code
       }
 
-      { 'genericSearchInput' => @base_hash.merge(options) }
+      { 'genericSearchInput' => @base_hash.merge(parse_options(options)) }
+    end
+
+    private
+
+    def parse_options(options)
+      # snake case is mostly ok except for options such as SSN which needs to be all caps
+      ## add any additional normalization into here -- parsing name, etc.
+      #
+      if options[:ssn].present?
+        ssn = options.delete(:ssn)
+        options[:SSN] = ssn
+      end
+      options
     end
   end
 end

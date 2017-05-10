@@ -15,7 +15,7 @@ module TransUnion
 
       def basic_person_search(options={})
         ## returns a BasicPersonSearch::Response object
-        BasicPersonSearch.basic_person_search(options)
+        BasicPersonSearch.perform_search(options)
       end
 
       def vehicle_search(options={})

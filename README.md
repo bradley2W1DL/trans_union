@@ -21,7 +21,9 @@ Or install it without bundler as:
 
 ### Configuration
 
-Use the authentication credentials provided by TransUnion when you sign up for api access:
+Use the authentication credentials provided by TransUnion for api access:
+
+*note: TransUnion must also whitelist the IP addresses from which you'll be making TLO requests*
 
 ### TLOxp
 ```ruby

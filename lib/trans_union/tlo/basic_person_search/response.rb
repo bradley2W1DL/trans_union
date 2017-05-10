@@ -9,12 +9,20 @@ module TransUnion::TLO
         @response
       end
 
+      def error?
+        result[:error_code] != '0'
+      end
+
       def result
         @response[:basic_person_search_response][:basic_person_search_result]
       end
 
       def output_records
         result[:basic_person_search_output_records][:basic_person_search_output_record]
+      end
+
+      def unique_records
+        output_records.uniq { |record| record.values_at(:report_token) }
       end
 
       def consolidated_records(records_array=output_records)
