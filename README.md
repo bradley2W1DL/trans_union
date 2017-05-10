@@ -26,23 +26,30 @@ Use the authentication credentials provided by TransUnion when you sign up for a
 ### TLOxp
 ```ruby
 TransUnion.configure do |config|
-  # todo
+  config.username = 'carl'
+  config.password = 'password'
+  # ... etc
 end
 
 ```
 
 ## Using TLOxp
 
-TLO is namespaces under the TransUnion Module. Example of how to create a TLO client:
+TLO is namespaced under the TransUnion Module. Example of how to make a BasicPersonSearch call:
 ```ruby
-client = TransUnion::TLO::Client.new
+options = {
+  name: { first_name: 'Gnarles', last_name: 'Barkley' },
+  phone: '9705554688'
+}
+
+response = TransUnion::TLO.basic_person_search(options)
 ```
 
-### Simple Person Search
+### BasicPersonSearch 
 
 // TODO
 
-### Comprehensive Person Search
+### VehicleSearch
 
 // TODO
 
