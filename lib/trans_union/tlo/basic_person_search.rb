@@ -9,7 +9,8 @@ module TransUnion::TLO
 
     operations :basic_person_search
 
-    def self.perform_search(options={})
+    ## method name needs to match SOAP operation from TLO
+    def self.basic_person_search(options={})
       ## returns a Savon::Response object
       response = super(message: build_request_hash(options))
       Response.new(response.body)
@@ -30,11 +31,11 @@ module TransUnion::TLO
 
     private
 
-    def parse_options(options)
+    def self.parse_options(options)
       # snake case is mostly ok except for options such as SSN which needs to be all caps
       ## add any additional normalization into here -- parsing name, etc.
       #
-      if options[:ssn].present?
+      if options[:ssn]
         ssn = options.delete(:ssn)
         options[:SSN] = ssn
       end
