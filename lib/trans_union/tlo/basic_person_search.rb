@@ -1,9 +1,10 @@
-require 'savon'
+# require 'savon'
 
 module TransUnion::TLO
   class BasicPersonSearch
     extend Savon::Model
 
+    ## todo would a hardcoded wsdl ever present a problem? could be passed a configuration value
     client wsdl: 'https://webservice.tlo.com/TLOWebService.asmx?wsdl'
     global :convert_request_keys_to, :camelcase
 

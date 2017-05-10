@@ -1,5 +1,3 @@
-require 'hashdiff'
-
 module TransUnion::TLO
   class BasicPersonSearch
     class Response

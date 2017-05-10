@@ -1,5 +1,4 @@
 # require 'trans_union/tlo/client'
-
 require 'trans_union/tlo/basic_person_search'
 require 'trans_union/tlo/basic_person_search/response'
 
