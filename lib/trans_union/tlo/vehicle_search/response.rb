@@ -5,13 +5,14 @@ module TransUnion::TLO
         @response[:vehicle_search_response][:vehicle_search_result]
       end
 
-      def vehicles_array
-        result[:vehicles][:tlo_vehicle]
+      def vehicle_array
+        vehicles = result[:vehicles][:tlo_vehicle]
+        vehicles.is_a?(Array)? vehicles : [vehicles]
       end
 
       def vehicle_info_array
         ret = []
-        vehicles_array.each do |vehicle|
+        vehicle_array.each do |vehicle|
           v = vehicle.dup
           v.delete(:registrants)
           ret << v
