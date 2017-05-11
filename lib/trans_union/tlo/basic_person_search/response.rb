@@ -1,18 +1,6 @@
 module TransUnion::TLO
   class BasicPersonSearch
-    class Response
-      def initialize(response={})
-        @response = response
-      end
-
-      def full_hash
-        @response
-      end
-
-      def error?
-        result[:error_code] != '0'
-      end
-
+    class Response < TransUnion::TLO::Response
       def result
         @response[:basic_person_search_response][:basic_person_search_result]
       end
@@ -26,6 +14,7 @@ module TransUnion::TLO
       end
 
       def consolidated_records(records_array=output_records)
+        ## TODO this call mutates the existing output_records => this is not ideal and should be changed
         #
         # Returns a single record for each unique record[:report_token]
         #   - consolidates any unique address / phone records together
@@ -65,6 +54,7 @@ module TransUnion::TLO
         #     address: '{...}'
         #   ]
         # }
+
         @_address_records ||= consolidated_records.map do |record|
           ret = {}
           ret[:report_token] = record[:report_token]
