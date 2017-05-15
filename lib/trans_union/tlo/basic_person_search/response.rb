@@ -10,34 +10,21 @@ module TransUnion::TLO
       end
 
       def unique_records
-        output_records.uniq { |record| record.values_at(:report_token) }
-      end
-
-      def consolidated_records(records_array=output_records)
-        ## TODO this call mutates the existing output_records => this is not ideal and should be changed
+        # returns an array of unique records by the :report_token
+        # Does not mutate the output_records
         #
-        # Returns a single record for each unique record[:report_token]
-        #   - consolidates any unique address / phone records together
-        return records_array if records_array.count == 1
+        return output_records if output_records.length == 1
 
-        top_record = records_array[0]
-        unique_records = records_array.select { |r| r[:report_token] != top_record[:report_token] }
-        duplicate_records = records_array.select { |r| r[:report_token] == top_record[:report_token] }
+        unique = output_records.uniq { |record| record.values_at(:report_token) }
+        # map over duplicated records
+        unique.dup.map do |record|
+          record.delete(:address_record) # includes any phone recs
 
-        addresses = []
+          record[:address_records] = address_records_for(record[:report_token])
+          record[:phone_records] = phone_records_for(record[:report_token])
 
-        duplicate_records.each do |record|
-          diffs = HashDiff.diff(top_record[:address_record], record[:address_record])
-          addresses << record[:address_record] if diffs.any?
+          record
         end
-        if addresses.any?
-          # returns an array of consolidated addresses instead of the single address hash
-          top_record[:address_record] = [top_record[:address_record], addresses].flatten
-        end
-        # recursive call to consolidate any records that don't match the top_record
-        unique_records = consolidate_records(unique_records) if unique_records.any?
-
-        [top_record, unique_records].flatten
       end
 
       def address_records
@@ -51,57 +38,108 @@ module TransUnion::TLO
         #       zip: '80026',
         #       county: 'BOULDER'
         #     },
-        #     address: '{...}'
-        #   ]
-        # }
-
-        @_address_records ||= consolidated_records.map do |record|
-          ret = {}
-          ret[:report_token] = record[:report_token]
-          ret[:addresses] = []
-          if record[:address_record].is_a? Hash
-            ret[:addresses] << record[:address_record][:address]
-          else
-            ret[:addresses] = record[:address_record].map { |r| r[:address] }
-          end
-          ret[:addresses] = ret[:addresses].uniq { |a| a.values_at(:line1, :city, :state, :zip) }
-          ret
-        end
-      end
-
-      def phone_records
-        # {
-        #   report_token: '123-xyz',
-        #   phones: [
         #     {
-        #       listing_name: 'BARKLEY, GNARLES',
-        #       phone_type: 'Mobile',
-        #       carrier: 'VERIZON',
-        #       carrier_type: 'WIRELESS',
-        #       city: '',
-        #       state: '',
-        #       county: '',
-        #       time_zone: 'MT',
-        #       score: '80',
-        #       phone: '9705552231'
+        #       line1: '...'
         #     }
         #   ]
         # }
-        @_phone_records ||= consolidated_records.map do |record|
-          ret = {}
-          ret[:report_token] = record[:report_token]
-          ret[:phones] = []
-          if record[:address_record].is_a? Hash
-            ret[:phones] << record[:address_record][:phones][:basic_phone_listing]
-          else # Array
-            ret[:phones] = record[:address_record].map do |r|
-              r[:phones][:basic_phone_listing] unless ret[:phones].include? r[:phones][:basic]
+        #
+        # TODO write a test for this => should only return one hash per unique report token
+        #
+        @_address_records ||=
+          begin
+            @address_records = {}
+            output_records.dup.map do |record|
+              next if record[:address_record].nil?
+
+              token = record[:report_token]
+              address = hash_except(record[:address_record], :phones)
+
+              if @address_records[token].nil? || @address_records[token].empty?
+                @address_records[token] = {
+                  report_token: token,
+                  addresses: [ address ].flatten
+                }
+              else
+                @address_records[token][:addresses] << address
+                @address_records[token][:addresses].flatten!
+              end
             end
+            @address_records.values
           end
-          ret[:phones] = ret[:phones].uniq { |p| p.values_at(:phone, :listing_name, :phone_type) }
-          ret
-        end
       end
+
+      def address_records_for(report_token)
+        records = address_records.select { |record| record[:report_token] == report_token }.first
+        records[:addresses] if records
+      end
+
+      def phone_records
+        # example return...
+        # [
+        #   {
+        #     report_token: '123-xyz',
+        #     phones: [
+        #       {
+        #         listing_name: 'BARKLEY, GNARLES',
+        #         phone_type: 'Mobile',
+        #         carrier: 'VERIZON',
+        #         carrier_type: 'WIRELESS',
+        #         city: '',
+        #         state: '',
+        #         county: '',
+        #         time_zone: 'MT',
+        #         score: '80',
+        #         phone: '9705552231'
+        #       }
+        #     ]
+        #   },
+        #   {
+        #     report_token: '667-xxx',
+        #     phones: [
+        #       {
+        #         listing_name: '...'
+        #       }
+        #     ]
+        #   }
+        # ]
+        @_phone_records ||=
+          begin
+            @phone_records = {}
+            output_records.dup.map do |record|
+              next if record[:address_record].nil? || record[:address_record][:phones].nil?
+              token = record[:report_token]
+              puts "map through output_records, #{token}"
+              phones = record[:address_record][:phones][:basic_phone_listing].reject { |l| l[:phone].nil? }
+
+              if phones && (@phone_records[token].nil? || @phone_records[token].empty?)
+                @phone_records[token] = {
+                  report_token: token,
+                  phones: [ phones ].flatten
+                }
+              elsif phones
+                @phone_records[token][:phones] << phones
+                @phone_records[token][:phones].flatten!
+              end
+            end
+            @phone_records.values
+          end
+      end
+
+      def phone_records_for(report_token)
+        records = phone_records.select { |record| record[:report_token] == report_token }.first
+        records[:phones] if records
+      end
+
+      #
+      # helper method // todo move this somewhere else (different file)
+      #
+      def hash_except(hash, *keys)
+        dup_hash = hash.dup
+        keys.each { |key| dup_hash.delete(key) }
+        dup_hash
+      end
+      
     end
   end
 end
