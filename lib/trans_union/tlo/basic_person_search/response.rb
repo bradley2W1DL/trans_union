@@ -1,11 +1,17 @@
 module TransUnion::TLO
   class BasicPersonSearch
     class Response < TransUnion::TLO::Response
+
+      def no_records_found?
+        result[:number_of_records_found].to_i == 0
+      end
+
       def result
         @response[:basic_person_search_response][:basic_person_search_result]
       end
 
       def output_records
+        return [] if no_records_found?
         result[:basic_person_search_output_records][:basic_person_search_output_record]
       end
 
@@ -13,7 +19,7 @@ module TransUnion::TLO
         # returns an array of unique records by the :report_token
         # Does not mutate the output_records
         #
-        return output_records if output_records.length == 1
+        return output_records if output_records.nil? || output_records.length == 1
 
         unique = output_records.uniq { |record| record.values_at(:report_token) }
         # map over duplicated records
@@ -139,7 +145,7 @@ module TransUnion::TLO
         keys.each { |key| dup_hash.delete(key) }
         dup_hash
       end
-      
+
     end
   end
 end
