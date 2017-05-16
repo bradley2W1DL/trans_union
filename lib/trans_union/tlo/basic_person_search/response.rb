@@ -117,8 +117,9 @@ module TransUnion::TLO
             output_records.dup.map do |record|
               next if record[:address_record].nil? || record[:address_record][:phones].nil?
               token = record[:report_token]
-              puts "map through output_records, #{token}"
-              phones = record[:address_record][:phones][:basic_phone_listing].reject { |l| l[:phone].nil? }
+
+              phone_listing = record[:address_record][:phones][:basic_phone_listing]
+              phones = phone_listing.is_a?(Hash) ? phone_listing : phone_listing.reject { |l| l[:phone].nil? }
 
               if phones && (@phone_records[token].nil? || @phone_records[token].empty?)
                 @phone_records[token] = {
