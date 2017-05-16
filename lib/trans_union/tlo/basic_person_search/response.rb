@@ -19,7 +19,8 @@ module TransUnion::TLO
         # returns an array of unique records by the :report_token
         # Does not mutate the output_records
         #
-        return output_records if output_records.nil? || output_records.length == 1
+        ## in case of single return record the output_records will be a Hash
+        return output_records if output_records.nil? || output_records.class == Hash
 
         unique = output_records.uniq { |record| record.values_at(:report_token) }
         # map over duplicated records

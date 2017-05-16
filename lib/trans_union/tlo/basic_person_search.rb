@@ -34,11 +34,16 @@ module TransUnion::TLO
       # snake case is mostly ok except for options such as SSN which needs to be all caps
       ## add any additional normalization into here -- parsing name, etc.
       #
-      if options[:ssn]
-        ssn = options.delete(:ssn)
-        options[:SSN] = ssn
+      require_upcase = [:ssn]
+      parsed_options = {}
+      options.map do |key, value|
+        if require_upcase.include? key.to_sym
+          parsed_options[key.upcase.to_sym] = value
+        else
+          parsed_options[key.to_sym] = value
+        end
       end
-      options
+      parsed_options
     end
   end
 end
