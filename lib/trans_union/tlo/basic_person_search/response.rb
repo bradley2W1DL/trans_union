@@ -52,7 +52,7 @@ module TransUnion::TLO
         #   ]
         # }
         #
-        # TODO write a test for this => should only return one hash per unique report token
+        # TODO write a test for this => should only return one hash per unique report_token
         #
         @_address_records ||=
           begin

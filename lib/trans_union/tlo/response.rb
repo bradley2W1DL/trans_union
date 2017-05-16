@@ -17,8 +17,12 @@ module TransUnion::TLO
       result[:error_code] != '0'
     end
 
-    #
-    # todo add the generic error messaging here ??
-    #
+    def error_code
+      result[:error_code]
+    end
+
+    def error_message
+      result[:error_message]
+    end
   end
 end
