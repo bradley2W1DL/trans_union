@@ -12,20 +12,24 @@ module TransUnion::TLO
 
       def output_records
         return [] if no_records_found?
-        result[:basic_person_search_output_records][:basic_person_search_output_record]
+        records = result[:basic_person_search_output_records][:basic_person_search_output_record]
+        # if only one record is returned, ensure that it's returned as an Array
+        records.class == Hash ? [records] : records
       end
 
       def unique_records
-        # returns an array of unique records by the :report_token
-        # Does not mutate the output_records
         #
-        ## in case of single return record the output_records will be a Hash
+        # returns an array of records unique by the :report_token
+        # Does not mutate the output_records array
+        #
         return [] if output_records.nil?
-        return [output_records] if output_records.class == Hash
+        # return [output_records] if output_records.class == Hash
 
         unique = output_records.uniq { |record| record.values_at(:report_token) }
         # map over duplicated records
-        unique.dup.map do |record|
+        unique.map do |record|
+          # don't mutate the initial array of records
+          record = record.dup
           record.delete(:address_record) # includes any phone recs
 
           record[:address_records] = address_records_for(record[:report_token])
@@ -57,8 +61,9 @@ module TransUnion::TLO
         @_address_records ||=
           begin
             @address_records = {}
-            output_records.dup.map do |record|
+            output_records.map do |record|
               next if record[:address_record].nil?
+              record = record.dup
 
               token = record[:report_token]
               address = hash_except(record[:address_record], :phones)
