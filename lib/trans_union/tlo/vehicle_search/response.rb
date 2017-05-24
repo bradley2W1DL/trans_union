@@ -6,8 +6,8 @@ module TransUnion::TLO
       end
 
       def vehicle_array
-        vehicles = result[:vehicles][:tlo_vehicle]
-        vehicles.is_a?(Array)? vehicles : [vehicles]
+        vehicles = result[:vehicles].nil? ? [] : result[:vehicles][:tlo_vehicle]
+        vehicles.is_a?(Array) ? vehicles : [vehicles]
       end
 
       def vehicle_info_array
