@@ -10,7 +10,9 @@ module TransUnion::TLO
     end
 
     def result
-      @response
+      # this method should be defined in each subclass based on
+      # response xml format
+      raise ":result method not implemented in sub-class => #{self.class.name}"
     end
 
     def error?
@@ -23,6 +25,10 @@ module TransUnion::TLO
 
     def error_message
       result[:error_message]
+    end
+
+    def no_records_found?
+      result[:number_of_records_found].to_i == 0
     end
   end
 end

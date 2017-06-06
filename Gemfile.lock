@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    trans_union (0.1.0)
+    trans_union (1.0.0)
       hashdiff (~> 0.3)
       savon (>= 2.0.0)
 
