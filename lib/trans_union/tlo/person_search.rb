@@ -44,15 +44,37 @@ module TransUnion::TLO
         options.map do |key, value|
           if require_upcase.include? key.to_sym
             parsed_options[key.upcase.to_sym] = value.gsub(/\s/, '')
-          elsif key.to_sym == :first_name
+          elsif key.to_sym == :name
+            parsed_options[:name] = self.parse_name_options(value)
+          elsif value.is_a?(Hash) && key.to_sym != :name
+            parsed_options[key.to_sym] = self.parse_options(value)
+          else
+            parsed_options[key.to_sym] = value.gsub(/\s/, '')
+          end
+        end
+        parsed_options
+      end
+
+      def parse_name_options(options)
+        parsed_options = {}
+        options.map do |key, value|
+          if key.to_sym == :first_name
             # just grab the first word of name to strip out middle initials
             split_name = value.split(/\s|-/)
             parsed_options[key.to_sym] = split_name[0]
             unless split_name[1].nil?
               parsed_options[:middle_name] = split_name[1]
             end
-          elsif value.is_a? Hash
-            parsed_options[key.to_sym] = self.parse_options(value)
+          elsif key.to_sym == :last_name
+            # need to strip off suffixes
+            split_name = value.split(/\s|-/)
+            if split_name.length == 1
+              parsed_options[:last_name] = value
+            else
+              suffix = split_name.pop if self::NAME_SUFFIXES.include? split_name[-1].upcase.gsub('.', '')
+              parsed_options[:last_name] = split_name.join('')
+              parsed_options[:name_suffix] = suffix if suffix
+            end
           else
             parsed_options[key.to_sym] = value.gsub(/\s/, '')
           end
