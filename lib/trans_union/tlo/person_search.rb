@@ -44,6 +44,9 @@ module TransUnion::TLO
         options.map do |key, value|
           if require_upcase.include? key.to_sym
             parsed_options[key.upcase.to_sym] = value.gsub(/\s/, '')
+          elsif key.to_sym == :first_name
+            # just grab the first word of name to strip out middle initials
+            parsed_options[key.to_sym] = value.split(/\s|-/)[0]
           elsif value.is_a? Hash
             parsed_options[key.to_sym] = self.parse_options(value)
           else
