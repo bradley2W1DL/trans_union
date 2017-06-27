@@ -22,5 +22,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'hashdiff', '~> 0.3'
 
   s.add_development_dependency 'rspec', '~> 3.4.0'
+  s.add_development_dependency 'webmock', '~> 3.0'
   s.add_development_dependency 'bundler', '~> 1.13'
 end
