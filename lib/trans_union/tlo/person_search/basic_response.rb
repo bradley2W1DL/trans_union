@@ -2,10 +2,6 @@ module TransUnion::TLO
   class PersonSearch
     class BasicResponse < TransUnion::TLO::Response
 
-      # def no_records_found?
-      #   result[:number_of_records_found].to_i == 0
-      # end
-
       def result
         @response[:basic_person_search_response][:basic_person_search_result]
       end
@@ -20,10 +16,8 @@ module TransUnion::TLO
       def unique_records
         #
         # returns an array of records unique by the :report_token
-        # Does not mutate the output_records array
         #
         return [] if output_records.nil?
-        # return [output_records] if output_records.class == Hash
 
         unique = output_records.uniq { |record| record.values_at(:report_token) }
         # map over duplicated records
@@ -146,7 +140,7 @@ module TransUnion::TLO
       end
 
       #
-      # helper method // todo move this somewhere else (different file)
+      # helper method essentially pulled from Rails
       #
       def hash_except(hash, *keys)
         dup_hash = hash.dup

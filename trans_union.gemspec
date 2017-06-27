@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.add_dependency 'savon', '>=2.0.0'
-  s.add_dependency 'hashdiff', '~> 0.3'
 
   s.add_development_dependency 'rspec', '~> 3.4.0'
   s.add_development_dependency 'webmock', '~> 3.0'
