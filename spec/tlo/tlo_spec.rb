@@ -39,6 +39,12 @@ describe TransUnion::TLO do
         end
         expect(TransUnion::TLO.permissible_use_code).to eq '1'
       end
+      it 'convert_nori_string_values' do
+        TransUnion::TLO.configure do |config|
+          config.convert_nori_string_values = true
+        end
+        expect(TransUnion::TLO.convert_nori_string_values).to be true
+      end
     end
   end
 

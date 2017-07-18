@@ -9,10 +9,10 @@ module TransUnion::TLO
       def output_records
         return [] if no_records_found?
         records = result[:person_search_output_records][:tlo_person_search_output_record]
-        # if only one record is returned, ensure that it's returned as an Array
-        if TransUnion::TLO.convert_string_values
+        if TransUnion::TLO.convert_nori_string_values
           records = convert_string_values(records)
         end
+        # if only one record is returned, ensure that it's returned as an Array
         records.class == Hash ? [records] : records
       end
 
