@@ -67,9 +67,3 @@ options = {
 
 response = TransUnion::TLO.basic_person_search(options)
 ```
-
-
-
-## Using IDxp
-
-// TODO
