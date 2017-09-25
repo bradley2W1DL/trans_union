@@ -1,7 +1,6 @@
 # TransUnion Ruby Gem
 
-Ruby wrapper for the TransUnion API. Primarily the TLO products, with plans to implement wrapper around
-the IDxp product.
+Ruby wrapper for the TransUnion API. 
 
 ## Installation
 
@@ -50,7 +49,7 @@ vehicle_tag_sightings_report, vehicle_wildcard_search, id_verification, verify_p
  
 __bold__ = currently implemented
 
-*Many of these wsdl endpoints share same or similar input formats and this gem could easily be entended to include more
+*Many of these wsdl endpoints share same or similar input formats and this gem could easily be extended to include more
 operations.  See TLOxp documentation for more information.
 
 
