@@ -5,9 +5,7 @@ module TransUnion::TLO
 
     client wsdl: TLO_WSDL
     global :convert_request_keys_to, :camelcase
-
-    global :ssl_ca_cert_file, '/etc/ssl/certs/entrust-ca-cert.pem'
-
+    global :ssl_ca_cert_file, CA_CERT.to_s
     operations :person_search, :basic_person_search
 
     class << self
