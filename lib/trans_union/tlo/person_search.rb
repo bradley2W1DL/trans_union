@@ -5,6 +5,7 @@ module TransUnion::TLO
 
     client wsdl: TLO_WSDL
     global :convert_request_keys_to, :camelcase
+    global :ssl_ca_cert_file, TransUnion::TLO.ssl_ca_cert_file if TransUnion::TLO.ssl_ca_cert_file
     operations :person_search, :basic_person_search
 
     class << self

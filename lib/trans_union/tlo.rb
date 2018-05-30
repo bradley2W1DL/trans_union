@@ -11,7 +11,9 @@ module TransUnion
     extend Constants
     class << self
       attr_accessor :username, :password, :dppa_purpose, :glb_purpose,
-                    :permissible_use_code, :version, :wsdl, :convert_nori_string_values
+                    :permissible_use_code, :version
+
+      attr_accessor :wsdl, :convert_nori_string_values, :ssl_ca_cert_file
 
       def configure
         yield self
