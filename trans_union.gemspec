@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(spec)})
   s.require_paths = ['lib']
 
-  s.add_dependency 'savon', '>=2.0.0'
+  s.add_dependency 'savon', '>=2.12.0'
 
   s.add_development_dependency 'rspec', '~> 3.4.0'
   s.add_development_dependency 'webmock', '~> 3.0'

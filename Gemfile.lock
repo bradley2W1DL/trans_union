@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     trans_union (1.1.1)
-      savon (>= 2.0.0)
+      savon (>= 2.12.0)
 
 GEM
   remote: https://rubygems.org/
