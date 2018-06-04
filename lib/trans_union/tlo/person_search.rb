@@ -5,8 +5,6 @@ module TransUnion::TLO
 
     client wsdl: TLO_WSDL
     global :convert_request_keys_to, :camelcase
-    global :ssl_version, :TLSv1
-
     global :adapter, :excon
     operations :person_search, :basic_person_search
 
@@ -30,7 +28,8 @@ module TransUnion::TLO
           Password: TransUnion::TLO.password,
           DPPAPurpose: TransUnion::TLO.dppa_purpose,
           GLBPurpose: TransUnion::TLO.glb_purpose,
-          PermissibleUseCode: TransUnion::TLO.permissible_use_code
+          PermissibleUseCode: TransUnion::TLO.permissible_use_code,
+          Version: TransUnion::TLO.version
         }
 
         { 'genericSearchInput' => @base_hash.merge(parse_options(options)) }
