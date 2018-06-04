@@ -5,7 +5,7 @@ module TransUnion::TLO
 
     client wsdl: TLO_WSDL
     global :convert_request_keys_to, :camelcase
-    global :ssl_ca_cert_file, CA_CERT.to_s # this opt doesn't seem to get all the way to the httpi call
+    global :ssl_version, :TLSv1
     operations :person_search, :basic_person_search
 
     class << self
