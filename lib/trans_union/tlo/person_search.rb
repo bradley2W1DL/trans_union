@@ -6,6 +6,8 @@ module TransUnion::TLO
     client wsdl: TLO_WSDL
     global :convert_request_keys_to, :camelcase
     global :ssl_version, :TLSv1
+
+    global :adapter, :excon
     operations :person_search, :basic_person_search
 
     class << self
