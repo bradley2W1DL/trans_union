@@ -9,6 +9,9 @@ require 'trans_union/tlo/vehicle_search/response'
 module TransUnion
   module TLO
     extend Constants
+
+    HTTPI.adapter = :excon # force excon as the http adapter
+
     class << self
       attr_accessor :username, :password, :dppa_purpose, :glb_purpose,
                     :permissible_use_code, :version, :wsdl, :convert_nori_string_values
