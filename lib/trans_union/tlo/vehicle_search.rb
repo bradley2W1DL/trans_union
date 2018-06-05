@@ -4,6 +4,7 @@ module TransUnion::TLO
     include Constants
 
     client wsdl: TLO_WSDL
+    global :adapter, :excon
     global :convert_request_keys_to, :camelcase
 
     operations :vehicle_search
